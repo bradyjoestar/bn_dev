@@ -89,11 +89,11 @@ const reportERC20Balances = async () => {
 
 const depositETH = async () => {
 
-  console.log("Deposit ETH")
+  console.log("Before Deposit ETH")
   await reportBalances()
   const start = new Date()
 
-  const response = await crossChainMessenger.depositETH(gwei)
+  const response = await crossChainMessenger.depositETH(eth)
   console.log(`Transaction hash (on L1): ${response.hash}`)
   await response.wait()
   console.log("Waiting for status to change to RELAYED")
@@ -101,6 +101,8 @@ const depositETH = async () => {
   await crossChainMessenger.waitForMessageStatus(response.hash,
                                                   optimismSDK.MessageStatus.RELAYED)
 
+
+  console.log("After Deposit ETH")
   await reportBalances()
   console.log(`depositETH took ${(new Date()-start)/1000} seconds\n\n`)
 }     // depositETH()
@@ -194,12 +196,8 @@ const withdrawETH = async () => {
 
 
 const main = async () => {
-    console.log("wenbin test")
     await setup()
-    // await depositETH()
-    // await withdrawETH()
-    // await depositERC20()
-    // await withdrawERC20()
+    await depositETH()
 
 }  // main
 

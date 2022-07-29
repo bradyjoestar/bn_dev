@@ -37,7 +37,7 @@ It covers both deposits (Ethereum to Optimism) and withdrawals (Optimism to Ethe
 
 ## Run the sample code
 
-The sample code is in `index.js`, execute it.
+The sample code is in `index.js`, run `yarn script` execute it.
 After you execute it, wait. It is not unusual for each operation to take over a minute on Kovan.
 On the production network the withdrawals take around a week each, because of the [challenge period](https://community.optimism.io/docs/developers/bridge/messaging/#understanding-the-challenge-period).
 
