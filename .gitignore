@@ -1,2 +1,8 @@
 .idea
 bitnetwork
+
+SplitDemo/envs/geth.env
+SplitDemo/envs/dtl.env
+SplitDemo/envs/batch-submitter.env
+SplitDemo/envs/intergration.env
+

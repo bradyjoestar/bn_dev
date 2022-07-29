@@ -13,7 +13,7 @@ function buildL1(){
 
 
 function startHardhatL1() {
-  docker run --net bridge -itd -p 9545:8545 --name=l1_geth ethereumoptimism/hardhat
+  docker run --net bridge -itd -p 9545:8545 --name=l1_geth davionlabs/hardhat
 }
 
 
