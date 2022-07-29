@@ -1,3 +1,3 @@
 #!/bin/bash
-git clone https://github.com/bitdao-io/bitneworkt.git
+git clone https://github.com/ethereum-optimism/optimism.git
 git checkout master
