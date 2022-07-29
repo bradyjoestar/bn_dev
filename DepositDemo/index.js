@@ -6,9 +6,8 @@ const ethers = require("ethers")
 const optimismSDK = require("@eth-optimism/sdk")
 require('dotenv').config()
 
-const network = "kovan"
+const network = "local"
 
-const mnemonic = process.env.MNEMONIC
 const l1Url = process.env.TEST_URL
 const l2Url = process.env.OPTI_TEST_URL
 
@@ -102,7 +101,7 @@ const depositETH = async () => {
                                                   optimismSDK.MessageStatus.RELAYED)
 
 
-  console.log("After Deposit ETH")
+  console.log("After Deposit 1 ETH")
   await reportBalances()
   console.log(`depositETH took ${(new Date()-start)/1000} seconds\n\n`)
 }     // depositETH()
