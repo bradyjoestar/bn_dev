@@ -2,3 +2,4 @@
 
 cd bitnetwork/ops
 make up
+cd ../../
