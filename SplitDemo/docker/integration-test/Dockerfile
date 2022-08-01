@@ -61,5 +61,6 @@ RUN yarn build
 FROM base as integration-tests
 WORKDIR /opt/optimism/integration-tests
 COPY ./ops/scripts/integration-tests.sh ./
+ENTRYPOINT ["/opt/optimism/integration-tests/integration-tests.sh"]
 CMD ["yarn", "test:integration"]
 
