@@ -61,4 +61,5 @@ RUN yarn build
 FROM base as data-transport-layer
 WORKDIR /opt/optimism/packages/data-transport-layer
 COPY ./ops/scripts/dtl.sh .
+ENTRYPOINT ["/opt/optimism/packages/data-transport-layer/dtl.sh"]
 CMD ["node", "dist/src/services/run.js"]
