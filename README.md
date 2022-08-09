@@ -1,8 +1,7 @@
 # dev 环境搭建
 
 ### 项目文件
-- download_project.sh： 下载optimism代码
-- start_bycompose.sh： 通过docker-compose快速拉起op集群
+- start_by_makeup.sh： 通过默认的官方 docker-compose 配置拉起服务
 - DepositDemo: 从L1向L2质押一定eth 测试案例，更多测试见optimism/integration-test
 - SplitDemo: 一个容器一个容器启动op集群，快速掌握背后细节
 

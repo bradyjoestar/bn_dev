@@ -1,10 +1,17 @@
 #!/bin/bash
 
+OPTIMISM="./optimism"
+
+if [[ ! -z "$1" ]] ;then
+  OPTIMISM=$1
+fi
+echo "current optimism path is: $OPTIMISM"
+
 function  buildL2Geth() {
   # build l2-geth
-  cd optimism/
+  cd $OPTIMISM
   docker build -f l2geth/Dockerfile -t davionlabs/l2geth .
-  cd ../
+  cd -
 }
 
 function replaceEnv(){

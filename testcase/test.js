@@ -4,7 +4,6 @@ const optimismSDK = require("@eth-optimism/sdk")
 const net = require("net");
 require('dotenv').config()
 
-
 const network = "optimism"
 const mnemonic = process.env.MNEMONIC
 const l1Url = process.env.TEST_URL

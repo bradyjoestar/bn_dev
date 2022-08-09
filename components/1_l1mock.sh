@@ -1,14 +1,20 @@
 #!/bin/bash
 
+OPTIMISM="./optimism"
+
+if [[ ! -z "$1" ]] ;then
+  OPTIMISM=$1
+fi
+echo "current optimism path is: $OPTIMISM"
 
 mkdir docker
 
 # build l1-mock-geth'
 function buildL1(){
-  cp -r optimism/ops/docker/hardhat  docker/
+  cp -r $OPTIMISM/ops/docker/hardhat  docker/
   cd docker/hardhat
   docker build -t davionlabs/hardhat .
-  cd ../../
+  cd -
 }
 
 
