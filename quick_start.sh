@@ -16,7 +16,7 @@ read -p "Enter your L1 contract deployer owner private-key: " L1_CONTRACTS_OWNER
 read -p "Enter your L2 contract deployer owner private-key: " L2_CONTRACTS_OWNER_KEY
 
 # do the real deploy
-cd ./components
+cd ./components || return
 
 ./1_l1mock.sh $OPTIMISM
 ./2_l2geth.sh $OPTIMISM
@@ -25,4 +25,4 @@ cd ./components
 ./5_gasoracle.sh  $OPTIMISM
 ./6_batch_submitter.sh $OPTIMISM
 
-cd -
+cd - || return

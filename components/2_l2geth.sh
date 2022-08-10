@@ -7,7 +7,7 @@ source ./utils.sh
 assignProjectPath $1
 
 # build and run l2-geth
-IMAGE="davionlabs/l2geth"
+IMAGE="bitnetwork/l2geth"
 function  buildL2Geth() {
   cd $OPTIMISM
   docker build -f l2geth/Dockerfile -t $IMAGE .

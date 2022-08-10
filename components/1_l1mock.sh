@@ -8,7 +8,7 @@ assignProjectPath $1
 mkdir docker
 
 # build and run l1-mock-geth
-IMAGE="davionlabs/hardhat"
+IMAGE="bitnetwork/hardhat"
 function buildL1(){
   cp -r $OPTIMISM/ops/docker/hardhat  docker/
   cd docker/hardhat

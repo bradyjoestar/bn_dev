@@ -7,7 +7,7 @@ source ./utils.sh
 assignProjectPath $1
 
 # build and run data-transporter-layer
-IMAGE="davionlabs/data-transport-layer"
+IMAGE="bitnetwork/data-transport-layer"
 function buildDtl(){
   cp -r docker/dtl/Dockerfile $OPTIMISM/Dockerfile
   cd $OPTIMISM

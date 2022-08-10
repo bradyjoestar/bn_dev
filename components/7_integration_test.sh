@@ -7,7 +7,7 @@ source ./utils.sh
 assignProjectPath $1
 
 # build and run integration-test
-IMAGE="davionlabs/integration-test"
+IMAGE="bitnetwork/integration-test"
 function buildIntegrationTest(){
   cp -r docker/integration-test/Dockerfile $OPTIMISM/Dockerfile
   cd $OPTIMISM

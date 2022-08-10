@@ -7,7 +7,7 @@ source ./utils.sh
 assignProjectPath $1
 
 # build and run batch-submitter
-IMAGE="davionlabs/batch-submitter-service"
+IMAGE="bitnetwork/batch-submitter-service"
 function buildBatchSubmitter(){
   cd $OPTIMISM
   docker build -f batch-submitter/Dockerfile -t $IMAGE .

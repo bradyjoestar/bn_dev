@@ -7,7 +7,7 @@ source ./utils.sh
 assignProjectPath $1
 
 # build and run gas-oracle
-IMAGE="davionlabs/gas-oracle"
+IMAGE="bitnetwork/gas-oracle"
 function buildGasOracle(){
   cd $OPTIMISM
   docker build -f gas-oracle/Dockerfile -t $IMAGE .

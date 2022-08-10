@@ -9,7 +9,7 @@ assignL1ContractsOwnerKey $2
 assignL1RpcUrl $3
 
 # build and run deployer
-IMAGE="davionlabs/deployer"
+IMAGE="bitnetwork/deployer"
 function buildDeployer(){
   cp -r docker/deployer/Dockerfile $OPTIMISM/Dockerfile
   cd $OPTIMISM
