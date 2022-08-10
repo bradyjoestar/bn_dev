@@ -1,31 +1,29 @@
 #!/bin/bash
 
-OPTIMISM="./optimism"
+# source util functions
+source ./utils.sh
 
-if [[ ! -z "$1" ]] ;then
-  OPTIMISM=$1
-fi
-echo "current optimism path is: $OPTIMISM"
+# set project path and params
+assignProjectPath $1
+assignL1ContractsOwnerKey $2
+assignL1RpcUrl $3
 
-if [[ ! -z "$2" ]] ;then
-  CONTRACTS_DEPLOYER_KEY=$2
-fi
-echo "current l1 contract owner is: $CONTRACTS_DEPLOYER_KEY"
-
+# build and run deployer
+IMAGE="davionlabs/deployer"
 function buildDeployer(){
   cp -r docker/deployer/Dockerfile $OPTIMISM/Dockerfile
   cd $OPTIMISM
-  docker build -t davionlabs/deployer .
+  docker build -t $IMAGE . --platform linux/amd64
 
   #clean the Dockerfile
   rm -rf Dockerfile
   cd -
 }
 
-
 function startDeployer(){
-  docker run --net bridge -itd   -p 8080:8081 -e "CONTRACTS_RPC_URL=http://172.17.0.1:9545"  -e "CONTRACTS_DEPLOYER_KEY=$CONTRACTS_DEPLOYER_KEY" -e "CONTRACTS_TARGET_NETWORK=local" --entrypoint "/opt/optimism/packages/contracts/deployer.sh"  --name=deployer davionlabs/deployer
+  docker run --net bridge -itd   -p 8080:8081 -e "CONTRACTS_RPC_URL=$L1_RPC_URL"  -e "CONTRACTS_DEPLOYER_KEY=$L1_CONTRACTS_OWNER_KEY" -e "CONTRACTS_TARGET_NETWORK=local" --entrypoint "/opt/optimism/packages/contracts/deployer.sh"  --name=deployer $IMAGE --platform linux/amd64
 }
 
 buildDeployer
+checkDockerImage $IMAGE
 startDeployer

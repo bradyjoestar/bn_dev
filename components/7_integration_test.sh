@@ -1,13 +1,21 @@
 #!/bin/bash
 
+# source util functions
+source ./utils.sh
+
+# set project path and params
+assignProjectPath $1
+
+# build and run integration-test
+IMAGE="davionlabs/integration-test"
 function buildIntegrationTest(){
-  cp -r docker/integration-test/Dockerfile optimism/Dockerfile
-  cd optimism
-  docker build -t davionlabs/integration-test .
+  cp -r docker/integration-test/Dockerfile $OPTIMISM/Dockerfile
+  cd $OPTIMISM
+  docker build -t $IMAGE . --platform linux/amd64
 
   #clean the Dockerfile
   rm -rf Dockerfile
-  cd ..
+  cd -
 }
 
 function replaceEnv(){
@@ -15,9 +23,10 @@ function replaceEnv(){
 }
 
 function startIntegrationtest(){
-  docker run --net bridge -itd --env-file envs/intergration.env --restart unless-stopped --name=intergration_test --entrypoint "/opt/optimism/integration-tests/integration-tests.sh" davionlabs/integration-test
+  docker run --net bridge -itd --env-file envs/intergration.env --restart unless-stopped --name=intergration_test --entrypoint "/opt/optimism/integration-tests/integration-tests.sh" $IMAGE --platform linux/amd64
 }
 
 buildIntegrationTest
+checkDockerImage $IMAGE
 replaceEnv
 startIntegrationtest

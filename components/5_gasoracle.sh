@@ -1,17 +1,23 @@
 #!/bin/bash
 
+# source util functions
+source ./utils.sh
+
+# set project path and params
+assignProjectPath $1
+
+# build and run gas-oracle
+IMAGE="davionlabs/gas-oracle"
 function buildGasOracle(){
-  cd optimism
-  docker build -f gas-oracle/Dockerfile -t davionlabs/gas-oracle .
-
-  cd ..
+  cd $OPTIMISM
+  docker build -f gas-oracle/Dockerfile -t $IMAGE .
+  cd -
 }
-
 
 function startGasOracle(){
-  docker run --net bridge -itd --restart unless-stopped -e "GAS_PRICE_ORACLE_ETHEREUM_HTTP_URL=http://172.17.0.1:9545" -e "GAS_PRICE_ORACLE_LAYER_TWO_HTTP_URL=http://172.17.0.1:8545" -e "GAS_PRICE_ORACLE_PRIVATE_KEY=0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba" --name=gas-oracle davionlabs/gas-oracle
+  docker run --net bridge -itd --restart unless-stopped -e "GAS_PRICE_ORACLE_ETHEREUM_HTTP_URL=$L1_RPC_URL" -e "GAS_PRICE_ORACLE_LAYER_TWO_HTTP_URL=$L2_RPC_URL" -e "GAS_PRICE_ORACLE_PRIVATE_KEY=$L2_CONTRACTS_OWNER_KEY" --name=gas-oracle $IMAGE
 }
 
-
 buildGasOracle
+checkDockerImage $IMAGE
 startGasOracle

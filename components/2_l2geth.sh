@@ -1,16 +1,16 @@
 #!/bin/bash
 
-OPTIMISM="./optimism"
+# source util functions
+source ./utils.sh
 
-if [[ ! -z "$1" ]] ;then
-  OPTIMISM=$1
-fi
-echo "current optimism path is: $OPTIMISM"
+# set project path
+assignProjectPath $1
 
+# build and run l2-geth
+IMAGE="davionlabs/l2geth"
 function  buildL2Geth() {
-  # build l2-geth
   cd $OPTIMISM
-  docker build -f l2geth/Dockerfile -t davionlabs/l2geth .
+  docker build -f l2geth/Dockerfile -t $IMAGE .
   cd -
 }
 
@@ -19,10 +19,11 @@ function replaceEnv(){
 }
 
 function startL2(){
-  docker run --net bridge -itd -p 8545:8545 -p 8546:8546 --env-file envs/geth.env --restart unless-stopped --entrypoint "/usr/local/bin/geth.sh" --name=l2_geth davionlabs/l2geth
+  docker run --net bridge -itd -p 8545:8545 -p 8546:8546 --env-file envs/geth.env --restart unless-stopped --entrypoint "/usr/local/bin/geth.sh" --name=l2_geth $IMAGE
 }
 
 
 buildL2Geth
+checkDcckerImage $IMAGE
 replaceEnv
 startL2

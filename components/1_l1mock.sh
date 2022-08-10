@@ -1,27 +1,25 @@
 #!/bin/bash
+# source util functions
+source ./utils.sh
 
-OPTIMISM="./optimism"
-
-if [[ ! -z "$1" ]] ;then
-  OPTIMISM=$1
-fi
-echo "current optimism path is: $OPTIMISM"
+# set project path
+assignProjectPath $1
 
 mkdir docker
 
-# build l1-mock-geth'
+# build and run l1-mock-geth
+IMAGE="davionlabs/hardhat"
 function buildL1(){
   cp -r $OPTIMISM/ops/docker/hardhat  docker/
   cd docker/hardhat
-  docker build -t davionlabs/hardhat .
+  docker build -t $IMAGE .
   cd -
 }
 
-
 function startHardhatL1() {
-  docker run --net bridge -itd -p 9545:8545 --name=l1_geth davionlabs/hardhat
+  docker run --net bridge -itd -p 9545:8545 --name=l1_geth $IMAGE
 }
 
-
 buildL1
+checkDockerImage $IMAGE
 startHardhatL1

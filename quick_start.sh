@@ -9,6 +9,11 @@ if [[ ! -z "$1" ]] ;then
 fi
 echo "current optimism path is: $OPTIMISM"
 
-cd $OPTIMISM/ops
-make up
-cd -
+read -p "Enter your L1 contract deployer private-key: " CONTRACTS_DEPLOYER_KEY
+
+if [[ ! -z "$1" ]] ;then
+  echo "L1 deployer private-key is null, must exist"
+  exit
+fi
+
+
