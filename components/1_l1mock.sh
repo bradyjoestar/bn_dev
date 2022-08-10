@@ -5,7 +5,9 @@ source ./utils.sh
 # set project path
 assignProjectPath $1
 
-mkdir docker
+if [[ ! -x "docker" ]] ; then
+  mkdir docker
+fi
 
 # build and run l1-mock-geth
 IMAGE="bitnetwork/hardhat"
@@ -17,9 +19,18 @@ function buildL1(){
 }
 
 function startHardhatL1() {
-  docker run --net bridge -itd -p 9545:8545 --name=l1_geth $IMAGE
+  docker run --net bridge -itd -p 9545:8545 --restart unless-stopped --name=l1_geth $IMAGE
 }
 
-buildL1
-checkDockerImage $IMAGE
-startHardhatL1
+# check is rebuild the image
+if [[ ! -z "$BUILD" ]] ;then
+  buildL1
+  checkDockerImage $IMAGE
+  checkDockerContainer $IMAGE
+  if [[ -z "$RESTART" ]]; then
+    rmContainer $IMAGE
+  fi
+  startHardhatL1
+else
+  restartContainer $IMAGE
+fi

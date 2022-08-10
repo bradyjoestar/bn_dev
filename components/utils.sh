@@ -43,3 +43,27 @@ function checkDockerImage() {
     exit
   fi
 }
+
+function checkDockerContainer() {
+  RESTART=false
+  NUM=`docker ps -a | grep $1 | wc -l`
+  if [[ $NUM -eq "1" ]] ; then
+    RESTART=true
+    echo "container [$1] is exist, it will be removed"
+  fi
+}
+
+function restartContainer() {
+  ID=`docker ps -a | grep $1 | awk '{print $1}'`
+  docker restart $ID
+}
+
+function stopContainer() {
+  ID=`docker ps -a | grep $1 | awk '{print $1}'`
+  docker stop $ID
+}
+
+function rmContainer() {
+  ID=`docker ps -a | grep $1 | awk '{print $1}'`
+  docker rm -f $ID
+}

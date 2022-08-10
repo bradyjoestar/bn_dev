@@ -22,8 +22,16 @@ function startL2(){
   docker run --net bridge -itd -p 8545:8545 -p 8546:8546 --env-file envs/geth.env --restart unless-stopped --entrypoint "/usr/local/bin/geth.sh" --name=l2_geth $IMAGE
 }
 
-
-buildL2Geth
-checkDcckerImage $IMAGE
-replaceEnv
-startL2
+# check is rebuild the image
+if [[ ! -z "$BUILD" ]] ;then
+  buildL2Geth
+  checkDockerImage $IMAGE
+  checkDockerContainer $IMAGE
+  if [[ -z "$RESTART" ]]; then
+    rmContainer $IMAGE
+  fi
+  replaceEnv
+  startL2
+else
+  restartContainer $IMAGE
+fi
