@@ -15,9 +15,6 @@ function assignProjectPath() {
 function assignL1ContractsOwnerKey() {
   if [[ ! -z "$1" ]] ;then
     L1_CONTRACTS_OWNER_KEY=$1
-  else
-    echo "l1 contract deployer owner must exist."
-    exit 1
   fi
   echo "current l1 contract owner is: $L1_CONTRACTS_OWNER_KEY"
 }
@@ -30,9 +27,6 @@ function assignL1RpcUrl() {
 function assignL2ContractsOwnerKey() {
   if [[ ! -z "$1" ]] ;then
     L2_CONTRACTS_OWNER_KEY=$1
-  else
-    echo "l2 contract deployer owner must exist."
-    exit 1
   fi
   echo "current l1 contract owner is: $L2_CONTRACTS_OWNER_KEY"
 }
