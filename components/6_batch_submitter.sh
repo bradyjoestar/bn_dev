@@ -22,7 +22,16 @@ function startBatchSubmitter(){
   docker run --net bridge -itd --env-file envs/batch-submitter.env --restart unless-stopped --entrypoint "/usr/local/bin/batch-submitter.sh" --name=batch-submitter $IMAGE
 }
 
-buildBatchSubmitter
-checkDockerImage $IMAGE
-replaceEnv
-startBatchSubmitter
+# check is rebuild the image
+if [[ ! -z "$BUILD" ]] ;then
+  buildBatchSubmitter
+  checkDockerImage $IMAGE
+  checkDockerContainer $IMAGE
+  if [[ -n "$RESTART" ]]; then
+    rmContainer $IMAGE
+  fi
+  replaceEnv
+  startBatchSubmitter
+else
+  restartContainer $IMAGE
+fi

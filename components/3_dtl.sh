@@ -31,7 +31,7 @@ if [[ ! -z "$BUILD" ]] ;then
   buildDtl
   checkDockerImage $IMAGE
   checkDockerContainer $IMAGE
-  if [[ -z "$RESTART" ]]; then
+  if [[ -n "$RESTART" ]]; then
     rmContainer $IMAGE
   fi
   replaceEnv
@@ -39,3 +39,5 @@ if [[ ! -z "$BUILD" ]] ;then
 else
   restartContainer $IMAGE
 fi
+
+# with check

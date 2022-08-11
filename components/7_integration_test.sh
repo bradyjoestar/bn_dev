@@ -23,10 +23,19 @@ function replaceEnv(){
 }
 
 function startIntegrationtest(){
-  docker run --net bridge -itd --env-file envs/intergration.env --restart unless-stopped --name=intergration_test --entrypoint "/opt/optimism/integration-tests/integration-tests.sh" $IMAGE --platform linux/amd64
+  docker run --net bridge -itd --env-file envs/intergration.env --restart unless-stopped --name=intergration_test --entrypoint "/opt/optimism/integration-tests/integration-tests.sh" $IMAGE
 }
 
-buildIntegrationTest
-checkDockerImage $IMAGE
-replaceEnv
-startIntegrationtest
+# check is rebuild the image
+if [[ ! -z "$BUILD" ]] ;then
+  buildIntegrationTest
+  checkDockerImage $IMAGE
+  checkDockerContainer $IMAGE
+  if [[ -n "$RESTART" ]]; then
+    rmContainer $IMAGE
+  fi
+  replaceEnv
+  startIntegrationtest
+else
+  restartContainer $IMAGE
+fi

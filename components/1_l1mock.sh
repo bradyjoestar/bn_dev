@@ -27,7 +27,7 @@ if [[ ! -z "$BUILD" ]] ;then
   buildL1
   checkDockerImage $IMAGE
   checkDockerContainer $IMAGE
-  if [[ -z "$RESTART" ]]; then
+  if [[ -n "$RESTART" ]]; then
     rmContainer $IMAGE
   fi
   startHardhatL1

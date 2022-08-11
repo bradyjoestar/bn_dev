@@ -27,7 +27,7 @@ if [[ ! -z "$BUILD" ]] ;then
   buildL2Geth
   checkDockerImage $IMAGE
   checkDockerContainer $IMAGE
-  if [[ -z "$RESTART" ]]; then
+  if [[ -n "$RESTART" ]]; then
     rmContainer $IMAGE
   fi
   replaceEnv
