@@ -22,7 +22,7 @@ function startHardhatL1() {
   docker run --net bridge -itd -p 9545:8545 --restart unless-stopped --name=l1_geth $IMAGE
 }
 
-# check is rebuild the image
+# rebuild / restart the image
 if [[ ! -z "$BUILD" ]] ;then
   buildL1
   checkDockerImage $IMAGE

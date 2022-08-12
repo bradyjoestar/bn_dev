@@ -2,6 +2,7 @@
 
 # default params
 OPTIMISM="./optimism"
+CONTRACTS_TARGET_NETWORK="local"
 L1_RPC_URL="http://172.17.0.1:9545"
 L2_RPC_URL="http://172.17.0.1:8545"
 # address = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
@@ -86,7 +87,7 @@ function twistLocalNetworkScript() {
   OPTIMISM=$1
   cp "$OPTIMISM/packages/contracts/deploy-config/local.ts" "$OPTIMISM/packages/contracts/deploy-config/local.ts.bak"
   fh="packages/contracts/deploy-config/local.ts"
-  sed -i -e "/ovmSequencerAddress: \'(.*)\'/s//$ovmSequencerAddress" $fh
+  xsed -i -e "/ovmSequencerAddress: '(.*)'/ s//$ovmSequencerAddress" $fh
   sed -n 's/ovmProposerAddress: '{[.*]'/$ovmSequencerAddress' $fh
   sed -n 's/ovmBlockSignerAddress: '[.*]'/$ovmSequencerAddress' $fh
   sed -n 's/ovmFeeWalletAddress: '[.*]'/$ovmSequencerAddress' $fh
@@ -97,4 +98,14 @@ function twistLocalNetworkScript() {
 function untwistLocalNetworkScript() {
   OPTIMISM=$1
   cp "$OPTIMISM/packages/contracts/deploy-config/local.ts.bak" "$OPTIMISM/packages/contracts/deploy-config/local.ts"
+}
+
+function xsed() {
+    system=$(uname)
+
+    if [ "${system}" = "Linux" ]; then
+        sed -i "$@"
+    else
+        sed -i '' "$@"
+    fi
 }

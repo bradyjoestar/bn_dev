@@ -21,7 +21,7 @@ function startGasOracle(){
   docker run --net bridge -itd --restart unless-stopped -e "GAS_PRICE_ORACLE_ETHEREUM_HTTP_URL=$L1_RPC_URL" -e "GAS_PRICE_ORACLE_LAYER_TWO_HTTP_URL=$L2_RPC_URL" -e "GAS_PRICE_ORACLE_PRIVATE_KEY=$L2_CONTRACTS_OWNER_KEY" --name=gas-oracle $IMAGE
 }
 
-# check is rebuild the image
+# rebuild / restart the image
 if [[ ! -z "$BUILD" ]] ;then
   buildGasOracle
   checkDockerImage $IMAGE

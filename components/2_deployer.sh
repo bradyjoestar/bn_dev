@@ -21,18 +21,29 @@ function buildDeployer(){
 }
 
 function startDeployer(){
-  docker run --net bridge -itd -p 8080:8081 -e "CONTRACTS_RPC_URL=$L1_RPC_URL"  -e "CONTRACTS_DEPLOYER_KEY=$L1_CONTRACTS_OWNER_KEY" -e "CONTRACTS_TARGET_NETWORK=local" --entrypoint "/opt/optimism/packages/contracts/deployer.sh"  --name=deployer $IMAGE --platform linux/amd64
+  docker run --net bridge -itd -p 8080:8081 -e "CONTRACTS_RPC_URL=$L1_RPC_URL"  -e "CONTRACTS_DEPLOYER_KEY=$L1_CONTRACTS_OWNER_KEY" -e "CONTRACTS_TARGET_NETWORK=$CONTRACTS_TARGET_NETWORK" --entrypoint "/opt/optimism/packages/contracts/deployer.sh"  --name=deployer $IMAGE --platform linux/amd64
 }
 
-# check is rebuild the image
+# rebuild / restart the image
 if [[ ! -z "$BUILD" ]] ;then
   buildDeployer
   checkDockerImage $IMAGE
   checkDockerContainer $IMAGE
+
   if [[ -n "$RESTART" ]]; then
     rmContainer $IMAGE
   fi
-  startDeployer
+
+  case $CONTRACTS_TARGET_NETWORK in
+    "local")
+      twistLocalNetworkScript
+      startDeployer
+      untwistLocalNetworkScript
+      ;;
+    "georli")
+      echo "georli not support yet"
+      ;;
+  esac
 else
   restartContainer $IMAGE
 fi

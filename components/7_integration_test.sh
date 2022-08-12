@@ -26,7 +26,7 @@ function startIntegrationtest(){
   docker run --net bridge -itd --env-file envs/intergration.env --restart unless-stopped --name=intergration_test --entrypoint "/opt/optimism/integration-tests/integration-tests.sh" $IMAGE
 }
 
-# check is rebuild the image
+# rebuild / restart the image
 if [[ ! -z "$BUILD" ]] ;then
   buildIntegrationTest
   checkDockerImage $IMAGE

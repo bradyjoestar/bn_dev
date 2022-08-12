@@ -26,7 +26,7 @@ function startDtl(){
   docker run --net bridge -itd -p 7878:7878 --env-file envs/dtl.env --restart unless-stopped --entrypoint "/opt/optimism/packages/data-transport-layer/dtl.sh" --name=dtl $IMAGE --platform linux/amd64
 }
 
-# check is rebuild the image
+# rebuild / restart the image
 if [[ ! -z "$BUILD" ]] ;then
   buildDtl
   checkDockerImage $IMAGE
