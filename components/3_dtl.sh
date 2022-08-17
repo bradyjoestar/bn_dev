@@ -9,8 +9,8 @@ assignProjectPath $1
 # build and run data-transporter-layer
 IMAGE="bitnetwork/data-transport-layer"
 function buildDtl(){
-  cp -r docker/dtl/Dockerfile $OPTIMISM/Dockerfile
-  cd $OPTIMISM
+  cp -r docker/dtl/Dockerfile $PROJECT/Dockerfile
+  cd $PROJECT
   docker build -t $IMAGE . --platform linux/amd64
 
   #clean the Dockerfile
@@ -37,7 +37,14 @@ if [[ ! -z "$BUILD" ]] ;then
   replaceEnv
   startDtl
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startDtl $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi
 
 # with check

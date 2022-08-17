@@ -1,13 +1,13 @@
 #!/bin/bash
 
-OPTIMISM="./optimism"
+PROJECT="./optimism"
 
-read -p "Enter full path to optimism: " OPTIMISM
+read -p "Enter full path to optimism: " PROJECT
 
 if [[ ! -z "$1" ]] ;then
-  OPTIMISM=$1
+  PROJECT=$1
 fi
-echo "current optimism path is: $OPTIMISM"
+echo "current optimism path is: $PROJECT"
 
 read -p "Enter your L1 contract deployer private-key: " CONTRACTS_DEPLOYER_KEY
 

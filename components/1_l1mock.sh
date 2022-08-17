@@ -12,7 +12,7 @@ fi
 # build and run l1-mock-geth
 IMAGE="bitnetwork/hardhat"
 function buildL1(){
-  cp -r $OPTIMISM/ops/docker/hardhat  docker/
+  cp -r $PROJECT/ops/docker/hardhat  docker/
   cd docker/hardhat
   docker build -t $IMAGE .
   cd -
@@ -32,5 +32,12 @@ if [[ ! -z "$BUILD" ]] ;then
   fi
   startHardhatL1
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startDeployer $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi

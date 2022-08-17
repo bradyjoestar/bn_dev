@@ -9,7 +9,7 @@ assignProjectPath $1
 # build and run batch-submitter
 IMAGE="bitnetwork/batch-submitter-service"
 function buildBatchSubmitter(){
-  cd $OPTIMISM
+  cd $PROJECT
   docker build -f batch-submitter/Dockerfile -t $IMAGE .
   cd -
 }
@@ -33,5 +33,12 @@ if [[ ! -z "$BUILD" ]] ;then
   replaceEnv
   startBatchSubmitter
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startGasOracle $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi

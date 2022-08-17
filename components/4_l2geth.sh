@@ -9,7 +9,7 @@ assignProjectPath $1
 # build and run l2-geth
 IMAGE="bitnetwork/l2geth"
 function  buildL2Geth() {
-  cd $OPTIMISM
+  cd $PROJECT
   docker build -f l2geth/Dockerfile -t $IMAGE .
   cd -
 }
@@ -33,5 +33,12 @@ if [[ ! -z "$BUILD" ]] ;then
   replaceEnv
   startL2
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startL2 $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi

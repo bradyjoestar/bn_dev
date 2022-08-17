@@ -12,7 +12,7 @@ assignL2ContractsOwnerKey $4
 # build and run gas-oracle
 IMAGE="bitnetwork/gas-oracle"
 function buildGasOracle(){
-  cd $OPTIMISM
+  cd $PROJECT
   docker build -f gas-oracle/Dockerfile -t $IMAGE .
   cd -
 }
@@ -31,5 +31,12 @@ if [[ ! -z "$BUILD" ]] ;then
   fi
   startGasOracle
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startGasOracle $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi

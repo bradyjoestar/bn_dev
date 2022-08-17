@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # default params
-OPTIMISM="./optimism"
+PROJECT="./optimism"
 CONTRACTS_TARGET_NETWORK="local"
 L1_RPC_URL="http://172.17.0.1:9545"
 L2_RPC_URL="http://172.17.0.1:8545"
@@ -10,8 +10,8 @@ L1_CONTRACTS_OWNER_KEY="ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7b
 L2_CONTRACTS_OWNER_KEY="ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 
 function assignProjectPath() {
-  OPTIMISM=$1
-  echo "current optimism path is: $OPTIMISM"
+  PROJECT=$1
+  echo "current optimism path is: $PROJECT"
 }
 
 function assignL1ContractsOwnerKey() {
@@ -28,11 +28,27 @@ function assignL1RpcUrl() {
   echo "current l1 contract rpc url is: $L1_RPC_URL"
 }
 
+function assignL1Network() {
+  if [[ ! -z "$1" ]] ;then
+    CONTRACTS_TARGET_NETWORK=$1
+  fi
+  echo "current l1 network is: $CONTRACTS_TARGET_NETWORK"
+}
+
 function assignL2ContractsOwnerKey() {
   if [[ ! -z "$1" ]] ;then
     L2_CONTRACTS_OWNER_KEY=$1
   fi
   echo "current l2 contract owner is: $L2_CONTRACTS_OWNER_KEY"
+}
+
+function assignL2ContractsOwnerAddress() {
+  if [[ ! -z "$1" ]] ;then
+    bvmFeeWalletAddress=$1
+    bvmAddressManagerOwner=$1
+    bvmGasPriceOracleOwner=$1
+  fi
+  echo "current l2 contract owner address is: $1"
 }
 
 function assignL2RpcUrl() {
@@ -44,7 +60,7 @@ function assignL2RpcUrl() {
 
 function checkDockerImage() {
   NUM=`docker images | grep $1 | wc -l`
-  if [[ ! $NUM -eq 1 ]] ; then
+  if [[ $NUM -lt 1 ]] ; then
     echo "image [$1] not build yet"
     exit
   fi
@@ -55,7 +71,7 @@ function checkDockerContainer() {
   NUM=`docker ps -a | grep $1 | wc -l`
   if [[ $NUM -eq "1" ]] ; then
     RESTART=true
-    echo "container [$1] is exist, it will be removed"
+    echo "container [$1] exists, it will be removed"
   fi
 }
 
@@ -76,28 +92,30 @@ function rmContainer() {
   fi
 }
 
-ovmSequencerAddress="0x70997970c51812dc3a010c7d01b50e0d17dc79c8"     # sequencer  address
-ovmProposerAddress="0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"      # proposer   address
-ovmBlockSignerAddress="0x00000398232E2064F896018496b4b44b3D62751F"   # signer     address
-ovmFeeWalletAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"     # owner      address
-ovmAddressManagerOwner="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-ovmGasPriceOracleOwner="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+bvmSequencerAddress="0x70997970c51812dc3a010c7d01b50e0d17dc79c8"     # sequencer  address
+bvmProposerAddress="0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"      # proposer   address
+bvmBlockSignerAddress="0x00000398232E2064F896018496b4b44b3D62751F"   # signer     address
+bvmFeeWalletAddress="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"     # owner      address
+bvmAddressManagerOwner="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+bvmGasPriceOracleOwner="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
 
 function twistLocalNetworkScript() {
-  OPTIMISM=$1
-  cp "$OPTIMISM/packages/contracts/deploy-config/local.ts" "$OPTIMISM/packages/contracts/deploy-config/local.ts.bak"
-  fh="packages/contracts/deploy-config/local.ts"
-  xsed -i -e "/ovmSequencerAddress: '(.*)'/ s//$ovmSequencerAddress" $fh
-  sed -n 's/ovmProposerAddress: '{[.*]'/$ovmSequencerAddress' $fh
-  sed -n 's/ovmBlockSignerAddress: '[.*]'/$ovmSequencerAddress' $fh
-  sed -n 's/ovmFeeWalletAddress: '[.*]'/$ovmSequencerAddress' $fh
-  sed -n 's/ovmAddressManagerOwner: '[.*]'/$ovmSequencerAddress' $fh
-  sed -n 's/ovmGasPriceOracleOwner: '[.*]'/$ovmSequencerAddress' $fh
+  PROJECT=$1
+  cp "$PROJECT/packages/contracts/deploy-config/local.ts" "$PROJECT/packages/contracts/deploy-config/local.ts.bak"
+  fh="$PROJECT/packages/contracts/deploy-config/local.ts"
+  sed -n 9p $fh | sed -r "s/.*bvmSequencerAddress: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e "s/{}/$bvmSequencerAddress/g" $fh
+  sed -n 10p $fh | sed -r "s/.*bvmProposerAddress: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e "s/{}/$bvmProposerAddress/g" $fh
+  sed -n 11p $fh | sed -r "s/.*bvmBlockSignerAddress: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e "s/{}/$bvmBlockSignerAddress/g" $fh
+  sed -n 12p $fh | sed -r "s/.*bvmFeeWalletAddress: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e "s/{}/$bvmFeeWalletAddress/g" $fh
+  sed -n 13p $fh | sed -r "s/.*bvmAddressManagerOwner: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e "s/{}/$bvmAddressManagerOwner/g" $fh
+  sed -n 14p $fh | sed -r "s/.*bvmGasPriceOracleOwner: \'([a-zA-Z0-9]*)\',.*/\1/" | xargs -I '{}' sed -i -e """s/{}/$bvmGasPriceOracleOwner/g" $fh
 }
 
 function untwistLocalNetworkScript() {
-  OPTIMISM=$1
-  cp "$OPTIMISM/packages/contracts/deploy-config/local.ts.bak" "$OPTIMISM/packages/contracts/deploy-config/local.ts"
+  PROJECT=$1
+  cp "$PROJECT/packages/contracts/deploy-config/local.ts.bak" "$PROJECT/packages/contracts/deploy-config/local.ts"
+  rm "$PROJECT/packages/contracts/deploy-config/local.ts.bak"
+  rm "$PROJECT/packages/contracts/deploy-config/local.ts-e"
 }
 
 function xsed() {

@@ -9,8 +9,8 @@ assignProjectPath $1
 # build and run integration-test
 IMAGE="bitnetwork/integration-test"
 function buildIntegrationTest(){
-  cp -r docker/integration-test/Dockerfile $OPTIMISM/Dockerfile
-  cd $OPTIMISM
+  cp -r docker/integration-test/Dockerfile $PROJECT/Dockerfile
+  cd $PROJECT
   docker build -t $IMAGE . --platform linux/amd64
 
   #clean the Dockerfile
@@ -37,5 +37,12 @@ if [[ ! -z "$BUILD" ]] ;then
   replaceEnv
   startIntegrationtest
 else
-  restartContainer $IMAGE
+  ID=`docker ps -a | grep $IMAGE | awk '{print $1}'`
+  if [[ ! "$ID" ]] ; then
+    echo "$IMAGE re deploy"
+    startGasOracle $IMAGE
+  else
+    echo "$IMAGE re start"
+    restartContainer $IMAGE
+  fi
 fi
