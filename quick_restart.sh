@@ -1,19 +1,19 @@
 #!/bin/bash
 
-PROJECT="./optimism"
+read -p "Enter full path to project: " PROJECT
+read -p "Enter L1 Network(local / georli): " L1_NETWORK
+read -p "Enter your contract deployer owner private-key: " CONTRACTS_OWNER_KEY
+read -p "Enter your contract deployer owner address: " CONTRACTS_OWNER_ADDRESS
 
-read -p "Enter full path to optimism: " PROJECT
-
-if [[ ! -z "$1" ]] ;then
-  PROJECT=$1
-fi
-echo "current optimism path is: $PROJECT"
-
-read -p "Enter your L1 contract deployer private-key: " CONTRACTS_DEPLOYER_KEY
-
-if [[ ! -z "$1" ]] ;then
-  echo "L1 deployer private-key is null, must exist"
-  exit
-fi
-
-
+echo "\nrestart l1..."
+./1_l1mock.sh $PROJECT
+echo "\nrestart deployer..."
+./2_deployer.sh $PROJECT $L1_NETWORK $CONTRACTS_OWNER_KEY $CONTRACTS_OWNER_ADDRESS
+echo "\nrestart dtl..."
+./3_dtl.sh $PROJECT
+echo "\nrestart l2geth..."
+./4_l2geth.sh $PROJECT
+echo "\nrestart gasoracle..."
+./5_gasoracle.sh $PROJECT
+echo "\nrestart batch_submitter..."
+./6_batch_submitter.sh $PROJECT
